@@ -1,0 +1,18 @@
+{% extends "layouts/a.html" %}
+{% load static %}
+{% block content %}
+    {% for post in posts %}
+        {% include "f_posts/post_card.html" with post=post %}
+    {% endfor %}
+
+    {% if posts.has_next %}
+    <div 
+        hx-get="{% if tag %}{% url 'home-tag' tag.slug %}{% else %}{% url 'home' %}{% endif %}?page={{ page|add:1 }}"
+        hx-trigger="revealed"
+        hx-target="this"
+        hx-swap="outerHTML"
+    >
+        Loading...
+    </div>
+{% endif %}
+{% endblock content%}
