@@ -21,11 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load variables from .env
 env.read_env(BASE_DIR / '.env')
 
+
 ENVIRONMENT = env('ENVIRONMENT', default='production')
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -61,6 +58,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'django_cleanup.apps.CleanupConfig',
     "django_htmx",
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -106,9 +105,16 @@ DATABASES = {
     }
 }
 
-POSTGRESS_LOCAL = True
-if ENVIRONMENT == 'production' or POSTGRESS_LOCAL == False:
+if ENVIRONMENT == 'production':
     DATABASES["default"]= dj_database_url.parse(env('DATABASE_URL'))
+    
+if ENVIRONMENT == 'production':
+    # Clodinary settings
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': env('CLOUD_NAME'),
+        'API_KEY': env('API_KEY'),
+        'API_SECRET': env('API_SECRET'),
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -162,8 +168,12 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
+if ENVIRONMENT=='production':
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+else:
+    MEDIA_ROOT = BASE_DIR / "media"
+    
+    
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
