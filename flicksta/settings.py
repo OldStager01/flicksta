@@ -28,9 +28,10 @@ ENVIRONMENT = env('ENVIRONMENT', default='production')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
+IS_DEBUG = env.bool('DEBUG', default=False)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if ENVIRONMENT == 'development':
+if ENVIRONMENT == 'development' or IS_DEBUG :
     DEBUG = True
 else:
     DEBUG = False
