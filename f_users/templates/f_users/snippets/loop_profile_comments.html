@@ -1,0 +1,12 @@
+<fade-in class="opacity-0 block -mt-20 ease-in-out" _="on load transition my margin-top to 0 over 0.2 seconds then transition my opacity to 1 over 0.4 seconds">
+<div class="w-full lg:w-[50rem] mx-auto">
+{% for comment in comments %}
+    <div class="flex gap-2">
+    <a href="{% url 'post' comment.parent_post.id %}">
+        <img class="w-20 h-20 object-cover rounded-xl hover:scale-95 max-w-none" src="{{ comment.parent_post.image }}">
+    </a>
+    {% include 'f_posts/post_comment.html' %}
+</div>
+{% endfor %}
+</div>
+</fade-in>

@@ -1,0 +1,18 @@
+<fade-in class="opacity-0 block -mt-20 ease-in-out" _="on load transition my margin-top to 0 over 0.2 seconds then transition my opacity to 1 over 0.2 seconds">
+<div class="grid place-items-start gap-x-8 mx-auto
+    {% if posts.count <= 1 %} grid-cols-1 max-w-xl
+    {% elif posts.count == 2 %} grid-cols-2 max-w-xl lg:grid-cols-2 lg:max-w-5xl
+    {% else %} grid-cols-1 max-w-xl lg:grid-cols-2 lg:max-w-5xl xl:grid-cols-3 xl:max-w-7xl 
+    {% endif %}
+">
+{% if posts %}
+    {% for post in posts %}
+        {% include "f_posts/post_card.html" %}
+    {% endfor %}
+{% else %}
+    <div class="text-center py-8">
+        <p class="text-gray-400">No posts found.</p>
+    </div>
+{% endif %}
+</div>
+</fade-in>

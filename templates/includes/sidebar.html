@@ -1,0 +1,73 @@
+{% load static %}
+
+<aside x-show="mobileSidebarOpen" x-cloak class="md:!block col-span-full md:col-span-1 lg:mr-[20%] order-1 md:order-2"
+        x-transition:enter="duration-300 ease-out"
+        x-transition:enter-start="opacity-0 -mt-96"
+        x-transition:enter-end="opacity-100 mt-0">
+        <section class="card p-4">
+            <h2>Categories</h2>
+            <ul class="hoverlist">
+                {% for category in categories %}
+                    <li class="{% if category.slug == tag.slug %}highlight{% endif %}">
+                    <a href="{% url 'home-tag' category.slug %}">
+                        <img class="w-8 h-8 object-cover mr-2" src="{{ category.image.url }}">
+                        <span class="font-bold text-sm">{{category.name}}</span>
+                    </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section class="card p-4">
+            <div class="flex items-center">
+                <img class="w-7 mr-2 -mt-3" src="{% static 'images/fireheart_black.svg' %}" />
+                <h2>Top Posts</h2>
+            </div>
+            <ul class="hoverlist">
+                {% for top_post in top_posts  %}
+                <li>
+                    <a href={% url "post" top_post.id %} class="flex items-stretch justify-between">
+                        <div class="flex items-center truncate">
+                            {% if top_post.image.url %}
+                                <img class="w-10 h-10 rounded-lg object-cover mr-3" src="{{ top_post.image.url }}">
+                            {% endif %}
+                            {% if top_post.author %}
+                                {% if top_post.author.profile %}
+                                <img class="w-6 h-6 rounded-full object-cover mr-1" src="{{ top_post.author.profile.avatar }}">
+                                    {% else %}
+                                <img class="w-6 h-6 rounded-full object-cover mr-1" src="{% static 'images/avatar_default.svg' %}">
+                                {% endif %}
+                            <span class="font-bold text-sm mr-1">{{ top_post.author.username }}</span>
+                            {% else %}
+                            <img class="w-6 h-6 rounded-full object-cover mr-1" src="{% static 'images/avatar_default.svg' %}">
+                            <span class="font-bold text-sm mr-1">no author</span>
+                            {% endif %}
+                        </div>
+                        <span class="text-sm text-grey-500 shrink-0 {% if top_post.user_liked %}font-bold{% else %}font-light{% endif %}">
+                            {{ top_post.likes.count }} Likes / {{ top_post.comments.count }}
+                        </span>
+
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section class="card p-4">
+            <div class="flex items-center">
+                <img class="w-7 mr-2 -mt-3" src="{% static 'images/fireheart_black.svg' %}"/>
+                <h2>Top Comments</h2>
+            </div>
+            <ul class="hoverlist">
+                {% for top_comment in top_comments %}
+                    <li>
+                        <a href={% url "post" top_comment.parent_post.id %} class="flex items-stretch justify-between">
+                            <div class="flex items-center truncate">
+                                <img class="w-6 h-6 rounded-full object-cover mr-1" src="{% if top_comment.author.profile %}{{ top_comment.author.profile.avatar }}{% else %}{% static 'images/avatar_default.svg' %}{% endif %}">
+                                <span class="font-bold text-sm mr-1 truncate">{{ top_comment.body }}</span>
+                            </div>
+                            <span class="text-sm {% if user in top_comment.likes.all %} font-bold {% else %} font-light {% endif %} text-grey-500 shrink-0">{{ top_comment.likes.count }} Likes / {{ top_comment.replies.count }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </aside>
