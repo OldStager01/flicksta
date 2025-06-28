@@ -38,34 +38,34 @@ def post_create_view(request):
     if request.method == 'POST':
         form = PostCreateForm(request.POST)
         if form.is_valid():
-            form = form.save(commit=False)
-            url = form.url
+            post = form.save(commit=False)
+            url = post.url
             if url:
                 try:
                     website = requests.get(url)
-                    print(f"Website text: {website.text}")
                     source_code = BeautifulSoup(website.text, 'html.parser')
                     
                     find_image = source_code.select('meta[content^="https://live.staticflickr.com/"]')
                     image = find_image[0]['content'] if find_image else None
-                    form.image = image
+                    post.image = image
                     
                     find_title = source_code.select('h1.photo-title')
                     title = find_title[0].text.strip() if find_title else None
-                    form.title = title
+                    post.title = title
                     
                     find_artist = source_code.select('a.owner-name')
                     artist = find_artist[0].text.strip() if find_artist else None
-                    form.artist = artist
+                    post.artist = artist
                     
-                    form.author = request.user
+                    post.author = request.user
                     
                 except Exception as e:
                     print(f"Error fetching data from URL: {e}")
-                    form.image = None
-                    form.title = None
-                    form.artist = None
-            form.save()
+                    post.image = None
+                    post.title = None
+                    post.artist = None
+            post.save()
+            form.save_m2m()
             return redirect('home')
     else:
         form = PostCreateForm()
