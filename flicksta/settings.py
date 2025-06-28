@@ -12,6 +12,7 @@ from pathlib import Path
 from environ import Env
 import dj_database_url
 import os
+from urllib.parse import parse_qsl, urlparse
 
 # Initialize environment variables
 env = Env()
@@ -28,7 +29,8 @@ ENVIRONMENT = env('ENVIRONMENT', default='production')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
-IS_DEBUG = env.bool('DEBUG', default=False)
+IS_DEBUG = env.bool('IS_DEBUG', default=False)
+print("IS_DEBUG:", IS_DEBUG)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if ENVIRONMENT == 'development' or IS_DEBUG :
@@ -107,7 +109,21 @@ DATABASES = {
 }
 
 if ENVIRONMENT == 'production':
-    DATABASES["default"] = dj_database_url.parse(env('DATABASE_URL'))
+    # DATABASES["default"] = dj_database_url.parse(env('DATABASE_URL'))
+    url = urlparse(env('DATABASE_URL'))
+    print(f"Using DATABASE_URL: {env('DATABASE_URL')}")
+    print(f"Parsed DATABASE_URL: {url}")    
+    DATABASES["default"] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': url.path[1:],  # Remove leading slash
+        'USER': url.username,
+        'PASSWORD': url.password,
+        'HOST': url.hostname,
+        'PORT': url.port,
+        'OPTIONS': {
+            'sslmode': 'require',  # Add only if you need SSL
+        },
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -159,15 +175,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # Media files configuration
 MEDIA_URL = '/media/'
 
-# Cloudinary configuration - both direct URL and dictionary
+# Cloudinary configuration
 if ENVIRONMENT == 'production':
-    # Configure Cloudinary storage
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': env("CLOUD_NAME"),
-        'API_KEY': env("API_KEY"),
-        'API_SECRET': env("API_SECRET"),
-    }
-    # Set storage backend to Cloudinary
+    CLOUDINARY_URL = env("CLOUDINARY_URL")
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
     print("Using Cloudinary for media storage")
 else:
