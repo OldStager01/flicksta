@@ -6,7 +6,8 @@ from f_posts.forms import ReplyCreateForm
 from django.http import Http404
 from django.contrib.auth import logout
 from django.contrib import messages
-
+from django.contrib.auth.decorators import login_required
+from allauth.account.utils import send_email_confirmation
 # Create your views here.
 def profile_view(request, username=None):
     if username:
@@ -33,6 +34,7 @@ def profile_view(request, username=None):
     posts = profile.user.posts.all()
     return render(request, 'f_users/profile.html', {'profile': profile, 'posts': posts})
 
+@login_required
 def profile_edit_view(request):
     print("Path", request.path)
     form = ProfileForm(instance=request.user.profile)
@@ -40,9 +42,14 @@ def profile_edit_view(request):
         form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
         if form.is_valid():
             form.save()
-            return redirect('profile-view')
+            print("VERIFIED", request.user.emailaddress_set.get(primary=True).verified)
+            if request.user.emailaddress_set.get(primary=True).verified:
+                return redirect('profile-view')
+            else:
+                return redirect('profile-verify-email')
     return render(request, 'f_users/profile-edit.html', {'form': form})
 
+@login_required
 def profile_delete_view(request):
     user = request.user
     if request.method == 'POST':
@@ -55,3 +62,8 @@ def profile_delete_view(request):
         finally:
             return redirect('home')  # Redirect to a suitable page after deletion
     return render(request, 'f_users/profile-delete.html')
+
+@login_required
+def profile_verify_email_view(request):
+    send_email_confirmation(request, request.user)
+    return redirect('profile-view')
