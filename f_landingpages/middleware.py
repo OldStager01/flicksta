@@ -26,9 +26,11 @@ def landingpage_middleware(get_response):
 
 
 def page_is_enabled(page_name):
-    page = LandingPage.objects.filter(name=page_name).first()
-    print(page.name, page.is_enabled)
-    if page:
-        return page.is_enabled
-    return False
-    
+    try:
+        page = LandingPage.objects.filter(name=page_name).first()
+        print(page.name, page.is_enabled)
+        if page:
+            return page.is_enabled
+        return False
+    except:
+        return False
