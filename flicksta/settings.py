@@ -28,6 +28,7 @@ print("IS_DEBUG:", IS_DEBUG)
 
 if ENVIRONMENT == 'development' or IS_DEBUG:
     DEBUG = True
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 else:
     DEBUG = False
     
@@ -76,6 +77,7 @@ INSTALLED_APPS = [
     "f_posts",
     "f_users",
     "f_features",
+    "f_landingpages",
 ]
 
 MIDDLEWARE = [
@@ -89,6 +91,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
+    
+    # User defined middleware
+    "f_landingpages.middleware.landingpage_middleware",
 ]
 
 ROOT_URLCONF = "flicksta.urls"
