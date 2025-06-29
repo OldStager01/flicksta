@@ -49,6 +49,7 @@ INTERNAL_IPS = (
 INSTALLED_APPS = [
     # Django core apps
     "django.contrib.admin",
+    'django.contrib.sites',
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -163,11 +164,23 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_SIGNUP_REDIRECT_URL = '/profile/onboarding/'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_USERNAME_BLACKLIST = ['admin', 'static', 'accounts', 'profile', 'category', 'post', 'inbox', 'theboss']
 
+# Email configuration
+if ENVIRONMENT == 'production':
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = env('EMAIL_ADDRESS')
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    DEFAULT_FROM_EMAIL = 'Flicksta <' + env('EMAIL_ADDRESS') + '>'
+    print("Using SMTP email backend for production")
+    ACCOUNT_EMAIL_SUBJECT_PREFIX = '[Flicksta]'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # ==============================================================================
 # INTERNATIONALIZATION
 # ==============================================================================
