@@ -15,6 +15,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path("", include("f_posts.urls")),
     path("profile/", include("f_users.urls")),
+    path("_/", include("f_landingpages.urls")),
 ]
 
 # Only serve media files locally during development
