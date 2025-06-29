@@ -30,7 +30,7 @@ if ENVIRONMENT == 'development' or IS_DEBUG:
     DEBUG = True
 else:
     DEBUG = False
-
+    
 # ==============================================================================
 # HOST CONFIGURATION
 # ==============================================================================
@@ -41,6 +41,13 @@ INTERNAL_IPS = (
     '127.0.0.1',
     'localhost',
 )
+
+# ==============================================================================
+# FEATURE FLAG CONFIGURATION
+# ==============================================================================
+
+STAGING = env.bool('STAGING', default=False)
+DEVELOPER = env('DEVELOPER', default='')
 
 # ==============================================================================
 # APPLICATION DEFINITION
@@ -67,7 +74,8 @@ INSTALLED_APPS = [
     
     # Local apps
     "f_posts",
-    'f_users',
+    "f_users",
+    "f_features",
 ]
 
 MIDDLEWARE = [

@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from ..models import Post, Tag, Comment, Reply
 from ..forms import PostCreateForm, PostEditForm, CommentCreateForm, ReplyCreateForm
 from bs4 import BeautifulSoup
+from f_features.views import feature_enabled
 import requests
 
 def home_view(request, tag = None):
@@ -23,10 +24,14 @@ def home_view(request, tag = None):
     except Exception as e:
         messages.error(request, 'Invalid page number.')
         return HttpResponse("")
+    
+    feature_herobutton = feature_enabled(1)
+    
     context = {
         'posts': posts,
         'tag': tag,
         'page': page,
+        'feature_herobutton': feature_herobutton,
     }
     
     if request.htmx:

@@ -4,7 +4,11 @@
         <h1 class="font1 text-6xl title-fadein">Awesome Photos & Captions</h1>
         <p class="text-lg font-bold mb-5">Share your favorite Photos from Flickr and add a great caption</p>
         {% if not user.is_authenticated %}
-            <a class="button" href={% url "account_signup" %}>Get Started</a>
+            {% if feature_herobutton %}
+                <a style="padding: 1.5rem 2rem; background-color: #38bdf8; border-radius: 0.375rem; color: white; font-weight: bold; text-decoration: none; display: inline-block;" href={% url "account_signup" %}>Get Started</a>
+            {% else %}
+                <a class="button" href={% url "account_signup" %}>Get Started</a>
+            {% endif %}
         {% endif %}
     </div>
 </hero>
