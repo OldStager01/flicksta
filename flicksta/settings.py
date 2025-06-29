@@ -1,18 +1,12 @@
-"""
-Django settings for flicksta project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.2/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/5.2/ref/settings/
-"""
-
-from pathlib import Path
-from environ import Env
-import dj_database_url
 import os
-from urllib.parse import parse_qsl, urlparse
+from pathlib import Path
+from urllib.parse import urlparse
+import dj_database_url
+from environ import Env
+
+# ==============================================================================
+# CORE SETTINGS
+# ==============================================================================
 
 # Initialize environment variables
 env = Env()
@@ -23,20 +17,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load variables from .env
 env.read_env(BASE_DIR / '.env')
 
+# Environment configuration
 ENVIRONMENT = env('ENVIRONMENT', default='production')
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
+
+# Debug configuration
 IS_DEBUG = env.bool('IS_DEBUG', default=False)
 print("IS_DEBUG:", IS_DEBUG)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-if ENVIRONMENT == 'development' or IS_DEBUG :
+if ENVIRONMENT == 'development' or IS_DEBUG:
     DEBUG = True
 else:
     DEBUG = False
+
+# ==============================================================================
+# HOST CONFIGURATION
+# ==============================================================================
 
 ALLOWED_HOSTS = ['*']
 
@@ -45,25 +42,31 @@ INTERNAL_IPS = (
     'localhost',
 )
 
-# Application definition
+# ==============================================================================
+# APPLICATION DEFINITION
+# ==============================================================================
 
 INSTALLED_APPS = [
+    # Django core apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    # Important: cloudinary_storage must be before staticfiles
-    "cloudinary_storage",
+    "cloudinary_storage", # Cloudinary storage for media files
     "django.contrib.staticfiles",
+    
+    # Third-party apps
     "cloudinary",
-    "f_posts",
-    'f_users',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'django_cleanup.apps.CleanupConfig',
     "django_htmx",
+    
+    # Local apps
+    "f_posts",
+    'f_users',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +83,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "flicksta.urls"
+
+# ==============================================================================
+# TEMPLATE CONFIGURATION
+# ==============================================================================
 
 TEMPLATES = [
     {
@@ -98,8 +105,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "flicksta.wsgi.application"
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# ==============================================================================
+# DATABASE CONFIGURATION
+# ==============================================================================
 
 DATABASES = {
     "default": {
@@ -125,14 +133,16 @@ if ENVIRONMENT == 'production':
         },
     }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# ==============================================================================
+# AUTHENTICATION CONFIGURATION
+# ==============================================================================
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -148,34 +158,40 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Django Allauth settings
 SITE_ID = 1
-
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_SIGNUP_REDIRECT_URL = '/profile/onboarding/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_USERNAME_BLACKLIST = ['admin', 'static', 'accounts', 'profile', 'category', 'post', 'inbox', 'theboss']
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+# ==============================================================================
+# INTERNATIONALIZATION
+# ==============================================================================
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# ==============================================================================
+# STATIC FILES CONFIGURATION
+# ==============================================================================
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Media files configuration
+# ==============================================================================
+# MEDIA FILES CONFIGURATION
+# ==============================================================================
+
 MEDIA_URL = '/media/'
 
-# Cloudinary configuration
+# Cloudinary configuration for production, local filesystem for development
 if ENVIRONMENT == 'production':
     CLOUDINARY_URL = env("CLOUDINARY_URL")
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -185,15 +201,17 @@ else:
     MEDIA_ROOT = BASE_DIR / "media"
     print("Using local filesystem for media storage")
 
+# ==============================================================================
+# DEFAULT FIELD CONFIGURATION
+# ==============================================================================
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ==============================================================================
+# DEBUG INFORMATION
+# ==============================================================================
+
 # Debug information
 print(f"Current environment: {ENVIRONMENT}")
 print(f"DEBUG mode: {DEBUG}")
 print(f"DEFAULT_FILE_STORAGE: {DEFAULT_FILE_STORAGE}")
-print(f"CLOUDINARY_URL environment variable: {'CLOUDINARY_URL' in os.environ}")
-print(f"CLOUDINARY_STORAGE configured: {'CLOUDINARY_STORAGE' in globals()}")
-
-# Default primary key field type
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Username blacklist
-ACCOUNT_USERNAME_BLACKLIST = ['admin', 'static', 'accounts', 'profile', 'category', 'post', 'inbox', 'theboss']
