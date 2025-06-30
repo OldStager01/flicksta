@@ -3,6 +3,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7DDJ12GKMH"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-7DDJ12GKMH');
+    </script>
+    
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +23,7 @@
 
     {% comment %} OPEN GRAPH {% endcomment %}
     <meta property="og:title" content="{% block og-caption %}{% endblock %} Flicksta">
+    <meta property="og:type" content="website">
     <meta property="og:url" content="https://{{ request.META.HTTP_HOST }}{{ request.path }}">
     <meta property="og:description" content="{% block og-description %}Flicker is an image-sharing platform where users can express personal thoughts, share memories, and rank their favorite flicker images.{% endblock %}">
     <meta property="og:image" content="{% block og-image %}https://{{ request.META.HTTP_HOST }}{% static 'images/flicker_logo_1200x630.webp' %}{% endblock %}">
