@@ -11,6 +11,9 @@ jobs:
       ENVIRONMENT: development
       SECRET_KEY: secret_key
       ENCRYPT_KEY: mKJKI2CP4Nta3OmVMAV9aW6MOH43VHxaCfPGWdHg6R4=
+      CLOUDINARY_CLOUD_NAME: dummy_cloud_name
+      CLOUDINARY_API_KEY: dummy_api_key
+      CLOUDINARY_API_SECRET: dummy_api_secret
 
     steps:
       - uses: actions/checkout@v4

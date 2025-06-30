@@ -2,7 +2,6 @@ from storages.backends.s3boto3 import S3Boto3Storage
 from django.conf import settings
 from django.core.exceptions import ValidationError
 import os
-from flicksta.decorators import upload_rate_limit
 
 def _s3_validate_and_save(self, name, content):
 # Validate file size before uploading to S3
