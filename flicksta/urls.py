@@ -15,15 +15,15 @@ from django.views.generic import TemplateView
 # Sitemaps
 from django.contrib.sitemaps.views import sitemap
 sitemaps ={
-    'static': StaticSitemap(),
-    'categories': CategorySitemap(),
-    'postpages': PostPageSitemap(),
+    'static': StaticSitemap,
+    'categories': CategorySitemap,
+    'postpages': PostPageSitemap,
 }
 
 
 urlpatterns = [
-    path("sitemap.xml", sitemap, {'sitemaps':sitemaps }, name="django.contrib.sitemaps.urls"),
-    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name="robots.txt"), 
+    path("sitemap.xml/", sitemap, {'sitemaps':sitemaps }, name="django.contrib.sitemaps.urls"),
+    path("robots.txt/", TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name="robots.txt"), 
     path("theboss/", admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path("", include("f_posts.urls")),
