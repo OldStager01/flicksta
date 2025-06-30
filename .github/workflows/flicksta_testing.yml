@@ -11,6 +11,16 @@ jobs:
       ENVIRONMENT: development
       SECRET_KEY: secret_key
       ENCRYPT_KEY: mKJKI2CP4Nta3OmVMAV9aW6MOH43VHxaCfPGWdHg6R4=
+      CLOUDINARY_CLOUD_NAME: dummy_cloud_name
+      CLOUDINARY_API_KEY: dummy_api_key
+      CLOUDINARY_API_SECRET: dummy_api_secret
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - uses: actions/checkout@v4

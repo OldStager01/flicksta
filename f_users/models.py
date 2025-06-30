@@ -2,11 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.templatetags.static import static
 from cloudinary.models import CloudinaryField
+from django.conf import settings
+from flicksta.storages import avatar_storage
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # image = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    image = CloudinaryField('image', folder = "avatar", transformation = {'width': 300, 'height': 300, 'crop': 'fill', 'format': 'webp'}, null=True, blank=True, resource_type='image')
+    image = models.ImageField(storage=avatar_storage, null=True, blank=True)
     realname = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     location = models.CharField(max_length=100, null=True, blank=True)
