@@ -36,7 +36,6 @@ class StaticStorage(S3Boto3Storage):
     bucket_name = 'flicksta-aws-bucket'
     location = 'static'
     
-    @upload_rate_limit()
     def _save(self, name, content):
         try:
             _s3_validate_and_save(self, name, content)
@@ -56,15 +55,21 @@ class IconStorage(MediaStorage):
     location = 'media/icons'
 
 
-if settings.STORAGE_SERVICE == 'cloudinary':
-    from cloudinary_storage.storage import MediaCloudinaryStorage
+if settings.ENVIRONMENT == 'production':
+    if settings.STORAGE_SERVICE == 'cloudinary':
+        from cloudinary_storage.storage import MediaCloudinaryStorage
 
-    avatar_storage = MediaCloudinaryStorage()
-    icon_storage = MediaCloudinaryStorage(resource_type='image')  # icons and svgs fall under image
+        avatar_storage = MediaCloudinaryStorage()
+        icon_storage = MediaCloudinaryStorage(resource_type='image')  # icons and svgs fall under image
 
-elif settings.STORAGE_SERVICE == 'aws':
-    avatar_storage = AvatarStorage()
-    icon_storage = IconStorage()
+    elif settings.STORAGE_SERVICE == 'aws':
+        avatar_storage = AvatarStorage()
+        icon_storage = IconStorage()
+    else:
+        from django.core.files.storage import FileSystemStorage
+
+        avatar_storage = FileSystemStorage(location=settings.MEDIA_ROOT / 'avatars')
+        icon_storage = FileSystemStorage(location=settings.MEDIA_ROOT / 'icons')
 
 else:
     from django.core.files.storage import FileSystemStorage
