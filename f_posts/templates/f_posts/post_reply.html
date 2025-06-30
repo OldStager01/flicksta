@@ -3,11 +3,11 @@
     <div class="flex">
         {% if reply.author %}
         <a href="">
-            <img class="w-8 h-8 object-cover rounded-full mr-2" src={{reply.author.profile.avatar}}>
+            <img class="w-8 h-8 object-cover rounded-full mr-2" src={{reply.author.profile.avatar}} alt="{{reply.author.profile.user.username}}'s avatar">
         </a>
         {% else %}
         <a href="">
-            <img class="w-8 h-8 object-cover rounded-full mr-2" src="{% static 'images/avatar_default.svg' %}">
+            <img class="w-8 h-8 object-cover rounded-full mr-2" src="{% static 'images/avatar_default.svg' %}" alt="No Author">
         </a>
         {% endif %}
         

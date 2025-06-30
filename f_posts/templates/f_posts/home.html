@@ -1,5 +1,6 @@
 {% extends "layouts/a.html" %}
 {% load static %}
+{% block head_title %}Home |{% endblock %}
 {% block content %}
     {% for post in posts %}
         {% include "f_posts/post_card.html" with post=post %}

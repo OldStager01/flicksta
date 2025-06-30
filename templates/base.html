@@ -6,7 +6,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flicksta</title>
+    <title>{% block head_title %}{% endblock %} Flicksta</title>
+
+    <meta name="description" content="Flicker is an image-sharing platform where users can express personal thoughts, share memories, and rank their favorite flicker images.">
+    <meta name="keywords" content="Flicker, Image Sharing, Social Media, Photo Uploads, User Rankings, Comments, Thoughts">
+    <meta name="author" content="Tanmay Tambat">
+
+    {% comment %} OPEN GRAPH {% endcomment %}
+    <meta property="og:title" content="{% block og-caption %}{% endblock %} Flicksta">
+    <meta property="og:url" content="https://{{ request.META.HTTP_HOST }}{{ request.path }}">
+    <meta property="og:description" content="{% block og-description %}Flicker is an image-sharing platform where users can express personal thoughts, share memories, and rank their favorite flicker images.{% endblock %}">
+    <meta property="og:image" content="{% block og-image %}https://{{ request.META.HTTP_HOST }}{% static 'images/flicker_logo_1200x630.webp' %}{% endblock %}">
+    <meta property="twitter:image" content="{% block tw-image %}https://{{ request.META.HTTP_HOST }}{% static 'images/flicker_logo_600x600.webp' %}{% endblock %}">
+
     <link rel="shortcut icon" type="image/png" href="https://img.icons8.com/small/64/000000/fire-heart.png"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
