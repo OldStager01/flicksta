@@ -4,7 +4,7 @@ from .models import Tag, Post
 
 
 class StaticSitemap(Sitemap):
-    def item(self):
+    def items(self):
         return ["home"]
     
     def location(self, item):
