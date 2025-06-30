@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 from urllib.parse import urlparse
-import dj_database_url
 from environ import Env
 
 # ==============================================================================
@@ -194,13 +193,14 @@ if ENVIRONMENT == 'production':
 # CACHE CONFIGURATION (for rate limiting)
 # ==============================================================================
 
+REDIS_URL = env('REDIS_URL') if ENVIRONMENT == 'production' else 'redis://localhost:6379/0' 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': env('REDIS_URL'),
-    } if ENVIRONMENT == 'production' else {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': REDIS_URL,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
     }
 }
 
