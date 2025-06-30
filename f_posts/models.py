@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 import uuid
 from cloudinary.models import CloudinaryField
+from flicksta.storages import icon_storage
 
 class Post(models.Model):
     id = models.CharField(max_length=100, default=uuid.uuid4, unique=True, primary_key=True, editable=False)
@@ -29,8 +30,8 @@ class Post(models.Model):
         
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    # image = models.FileField(upload_to='icons/', blank=True, null=True)
-    image = CloudinaryField('image', folder="tags", null=True, blank=True, resource_type='auto')
+    image = models.FileField(upload_to='icons/', storage=icon_storage, blank=True, null=True)
+    # image = CloudinaryField('image', folder="tags", null=True, blank=True, resource_type='auto')
     slug = models.SlugField(max_length=100, unique=True)
     order = models.IntegerField(default=0, blank=True, null=True)
     

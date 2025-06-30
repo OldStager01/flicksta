@@ -61,21 +61,22 @@ DEVELOPER = env('DEVELOPER', default='')
 INSTALLED_APPS = [
     # Django core apps
     "django.contrib.admin",
-    'django.contrib.sites',
+    "django.contrib.sites",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "cloudinary_storage", # Cloudinary storage for media files
+    # "cloudinary_storage", # Cloudinary storage for media files
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
     
     # Third-party apps
-    "cloudinary",
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'django_cleanup.apps.CleanupConfig',
+    # "cloudinary",
+    "storages",  # For AWS S3 storage
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "django_cleanup.apps.CleanupConfig",
     "django_htmx",
     
     # Local apps
@@ -221,14 +222,50 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # MEDIA FILES CONFIGURATION
 # ==============================================================================
 
+STORAGE_SERVICE = env('STORAGE_SERVICE', default='cloudinary')  # 'aws' or 'cloudinary'
 MEDIA_URL = '/media/'
 
 # Cloudinary configuration for production, local filesystem for development
 if ENVIRONMENT == 'production':
-    CLOUDINARY_URL = env("CLOUDINARY_URL")
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
-    print("Using Cloudinary for media storage")
+    if STORAGE_SERVICE == 'cloudinary':
+        # FOR CLOUDINARY AS MEDIA STORAGE  
+        CLOUDINARY_URL = env("CLOUDINARY_URL")
+        DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+        STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
+        print("Using Cloudinary for media storage")
+    elif STORAGE_SERVICE == 'aws':
+        # FOR AWS S3 AS MEDIA STORAGE
+        AWS_ACCESS_KEY_ID = env('AWS_S3_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = env('AWS_S3_SECRET_ACCESS_KEY')
+        AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+        AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='us-east-1')
+        AWS_S3_SIGNATURE_VERSION = 's3v4'
+        AWS_S3_ADDRESSING_STYLE = 'virtual'
+        AWS_DEFAULT_ACL = None
+        AWS_S3_OBJECT_PARAMETERS = {
+            'CacheControl': 'max-age=86400',
+        }
+        AWS_S3_FILE_OVERWRITE = False
+        AWS_QUERYSTRING_AUTH = True
+        
+        # Use custom storage classes
+        STORAGES = {
+            "default": {
+                "BACKEND": "flicksta.storages.MediaStorage",
+            },
+            "staticfiles": {
+                "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            },
+        }
+        
+        # Backward compatibility
+        DEFAULT_FILE_STORAGE = 'flicksta.storages.MediaStorage'
+        
+        print("Using AWS S3 for media storage")
+        print(f"AWS_STORAGE_BUCKET_NAME: {AWS_STORAGE_BUCKET_NAME}")
+        print(f"AWS_S3_REGION_NAME: {AWS_S3_REGION_NAME}")
+    else:
+        raise ValueError("Invalid STORAGE_SERVICE specified. Use 'cloudinary' or 'aws'.")
 else:
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
