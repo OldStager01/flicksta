@@ -3,9 +3,9 @@
     {% if comment.likes.count %}
         <div class="flex items-center gap-1">
             {% if user in comment.likes.all %}
-                <img class="w-5 -mt-1" src={% static 'images/fireheart_red.svg' %}>
+                <img class="w-5 -mt-1" src={% static 'images/fireheart_red.svg' %} alt="Liked">
             {% else %}
-                <img class="w-5 -mt-1" src={% static 'images/fireheart.svg' %}>
+                <img class="w-5 -mt-1" src={% static 'images/fireheart.svg' %} alt="Like">
             {% endif %}
             {{ comment.likes.count }}
         </div>

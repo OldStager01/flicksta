@@ -35,8 +35,12 @@ else:
 # ==============================================================================
 # HOST CONFIGURATION
 # ==============================================================================
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+RENDER_EXTERNAL_HOSTNAME = env('RENDER_EXTERNAL_HOSTNAME', default=None)
+if RENDER_EXTERNAL_HOSTNAME is not None:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 INTERNAL_IPS = (
     '127.0.0.1',
@@ -64,6 +68,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "cloudinary_storage", # Cloudinary storage for media files
     "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
     
     # Third-party apps
     "cloudinary",

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 import uuid
 from cloudinary.models import CloudinaryField
 
@@ -22,6 +23,9 @@ class Post(models.Model):
     class Meta:
         ordering = ['-created_at']
         
+    def get_absolute_url(self):
+        return reverse("post", kwargs={"pk": self.id})
+        
         
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -35,6 +39,10 @@ class Tag(models.Model):
     
     class Meta:
         ordering = ['order', 'name']
+        
+    def get_absolute_url(self):
+        return reverse("home-tag", kwargs={"tag": self.slug})
+    
         
         
 class Comment(models.Model):
