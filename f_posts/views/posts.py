@@ -9,6 +9,7 @@ from ..forms import PostCreateForm, PostEditForm, CommentCreateForm, ReplyCreate
 from bs4 import BeautifulSoup
 from f_features.views import feature_enabled
 import requests
+from flicksta.decorators import create_post_rate_limit
 
 def home_view(request, tag = None):
     if tag:
@@ -38,6 +39,7 @@ def home_view(request, tag = None):
         return render(request, 'f_posts/snippets/loop_homepage_posts.html', context)
     return render(request, 'f_posts/home.html', context)
 
+@create_post_rate_limit()
 @login_required
 def post_create_view(request):
     if request.method == 'POST':
@@ -69,6 +71,8 @@ def post_create_view(request):
                     post.image = None
                     post.title = None
                     post.artist = None
+            # else:
+            #     return redirect('post-create')
             post.save()
             form.save_m2m()
             return redirect('home')

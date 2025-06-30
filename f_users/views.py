@@ -8,6 +8,9 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from allauth.account.utils import send_email_confirmation
+from flicksta.decorators import upload_rate_limit, email_rate_limit
+from flicksta.validators import validate_file_size, validate_file_extension
+
 # Create your views here.
 def profile_view(request, username=None):
     if username:
@@ -35,6 +38,7 @@ def profile_view(request, username=None):
     return render(request, 'f_users/profile.html', {'profile': profile, 'posts': posts})
 
 @login_required
+@upload_rate_limit()
 def profile_edit_view(request):
     print("Path", request.path)
     form = ProfileForm(instance=request.user.profile)
@@ -64,6 +68,7 @@ def profile_delete_view(request):
     return render(request, 'f_users/profile-delete.html')
 
 @login_required
+@email_rate_limit()
 def profile_verify_email_view(request):
     send_email_confirmation(request, request.user)
     return redirect('profile-view')

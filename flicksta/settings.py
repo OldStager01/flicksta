@@ -55,6 +55,42 @@ STAGING = env.bool('STAGING', default=False)
 DEVELOPER = env('DEVELOPER', default='')
 
 # ==============================================================================
+# FILE UPLOAD SECURITY CONFIGURATION
+# ==============================================================================
+
+# Maximum file size (in bytes) - 10MB default
+FILE_UPLOAD_MAX_MEMORY_SIZE = env.int('FILE_UPLOAD_MAX_MEMORY_SIZE', default=10 * 1024 * 1024)  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = env.int('DATA_UPLOAD_MAX_MEMORY_SIZE', default=10 * 1024 * 1024)  # 10MB
+
+# Maximum total upload size
+DATA_UPLOAD_MAX_NUMBER_FIELDS = env.int('DATA_UPLOAD_MAX_NUMBER_FIELDS', default=1000)
+
+# Allowed file extensions
+ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']
+
+# File type specific size limits (in bytes)
+MAX_IMAGE_SIZE = env.int('MAX_IMAGE_SIZE', default=5 * 1024 * 1024)  # 5MB
+
+# Rate limiting settings
+UPLOAD_RATE_LIMIT = {
+    'per_minute': env.int('UPLOADS_PER_MINUTE', default=10), # Default 10 uploads per minute
+    'per_hour': env.int('UPLOADS_PER_HOUR', default=100), # Default 100 uploads per hour
+    'per_day': env.int('UPLOADS_PER_DAY', default=200), # Default 500 uploads per day   
+}
+
+CREATE_POST_RATE_LIMIT = {
+    'per_minute': env.int('POSTS_PER_MINUTE', default=10), # Default 10 posts per minute
+    'per_hour': env.int('POSTS_PER_HOUR', default=100), # Default 100 posts per hour
+    'per_day': env.int('POSTS_PER_DAY', default=200), # Default 200 posts per day
+}
+
+EMAIL_RATE_LIMIT = {
+    'per_minute': env.int('EMAILS_PER_MINUTE', default=2), # Default 2 emails per minute
+    'per_hour': env.int('EMAILS_PER_HOUR', default=10), # Default 10 emails per hour
+    'per_day': env.int('EMAILS_PER_DAY', default=20), # Default 50 emails per day
+}
+
+# ==============================================================================
 # APPLICATION DEFINITION
 # ==============================================================================
 
@@ -78,6 +114,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "django_cleanup.apps.CleanupConfig",
     "django_htmx",
+    "django_ratelimit",
     
     # Local apps
     "f_posts",
@@ -152,6 +189,24 @@ if ENVIRONMENT == 'production':
             'sslmode': 'require',  # Add only if you need SSL
         },
     }
+
+# ==============================================================================
+# CACHE CONFIGURATION (for rate limiting)
+# ==============================================================================
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': env('REDIS_URL'),
+    } if ENVIRONMENT == 'production' else {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Rate limiting backend
+RATELIMIT_USE_CACHE = 'default'
+RATELIMIT_ENABLE = True
 
 # ==============================================================================
 # AUTHENTICATION CONFIGURATION
@@ -276,6 +331,18 @@ else:
 # ==============================================================================
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ==============================================================================
+# SECURITY CONFIGURATION
+# ==============================================================================
+
+# Content Security Policy
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+
+# File upload security
+SECURE_FILE_UPLOAD = True
 
 # ==============================================================================
 # DEBUG INFORMATION
