@@ -12,10 +12,10 @@ class StaticStorage(S3Boto3Storage):
 # Per-field Storage Instances for use in models
 
 class AvatarStorage(MediaStorage):
-    location = 'avatars'
+    location = 'media/avatars'
 
 class IconStorage(MediaStorage):
-    location = 'icons'
+    location = 'media/icons'
 
 
 if settings.STORAGE_SERVICE == 'cloudinary':

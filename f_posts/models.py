@@ -30,7 +30,7 @@ class Post(models.Model):
         
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    image = models.FileField(upload_to='icons/', storage=icon_storage, blank=True, null=True)
+    image = models.FileField(storage=icon_storage, blank=True, null=True)
     # image = CloudinaryField('image', folder="tags", null=True, blank=True, resource_type='auto')
     slug = models.SlugField(max_length=100, unique=True)
     order = models.IntegerField(default=0, blank=True, null=True)

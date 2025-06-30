@@ -247,7 +247,6 @@ if ENVIRONMENT == 'production':
         }
         AWS_S3_FILE_OVERWRITE = False
         AWS_QUERYSTRING_AUTH = True
-        
         # Use custom storage classes
         STORAGES = {
             "default": {
