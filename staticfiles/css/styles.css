@@ -622,6 +622,11 @@ video {
   grid-row-start: 1;
 }
 
+.mx-10 {
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -818,6 +823,10 @@ video {
   height: 100vh;
 }
 
+.min-h-\[calc\(100vh-5rem\)\] {
+  min-height: calc(100vh - 5rem);
+}
+
 .w-10 {
   width: 2.5rem;
 }
@@ -879,6 +888,10 @@ video {
   max-width: 80rem;
 }
 
+.max-w-\[30rem\] {
+  max-width: 30rem;
+}
+
 .max-w-md {
   max-width: 28rem;
 }
@@ -889,6 +902,10 @@ video {
 
 .max-w-xl {
   max-width: 36rem;
+}
+
+.flex-1 {
+  flex: 1 1 0%;
 }
 
 .shrink-0 {
@@ -1233,6 +1250,10 @@ video {
   line-height: 1.25rem;
 }
 
+.leading-tight {
+  line-height: 1.25;
+}
+
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity, 1));
@@ -1472,19 +1493,9 @@ p {
   margin-bottom: 1rem;
 }
 
-form p {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
 label,
 input {
   display: inline-block;
-}
-
-form p label {
-  width: 7rem;
 }
 
 label {
@@ -1650,6 +1661,19 @@ input {
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 1.5;
+}
+
+.helptext {
+  margin-top: 1rem;
+  display: block;
+}
+
+form[action="/accounts/signup/"] ul {
+  display: none;
+}
+
+form[action="/accounts/signup/"] ul.errorlist {
+  display: block;
 }
 
 .hover\:scale-95:hover {

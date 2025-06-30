@@ -112,18 +112,12 @@ body {
 p {
 	margin-bottom: 1rem;
 }
-form p {
-	display: flex;
-	align-items: center;
-	margin-bottom: 1rem;
-}
+
 label,
 input {
 	display: inline-block;
 }
-form p label {
-	width: 7rem;
-}
+
 label {
 	margin: 6px 0 3px;
 }
@@ -247,4 +241,16 @@ input {
 }
 #profile article p {
 	@apply truncate leading-normal;
+}
+
+.helptext {
+	@apply block mt-4;
+}
+
+form[action="/accounts/signup/"] ul {
+	@apply hidden;
+}
+
+form[action="/accounts/signup/"] ul.errorlist {
+	@apply block;
 }

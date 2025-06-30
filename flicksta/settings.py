@@ -216,6 +216,7 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+
 # ==============================================================================
 # MEDIA FILES CONFIGURATION
 # ==============================================================================
@@ -226,9 +227,11 @@ MEDIA_URL = '/media/'
 if ENVIRONMENT == 'production':
     CLOUDINARY_URL = env("CLOUDINARY_URL")
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
     print("Using Cloudinary for media storage")
 else:
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
     MEDIA_ROOT = BASE_DIR / "media"
     print("Using local filesystem for media storage")
 
