@@ -3,6 +3,11 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 import os
 
+
+# Locations
+icon_storage_location = 'media/icons'
+avatar_storage_location = 'media/avatars'
+
 def _s3_validate_and_save(self, name, content):
 # Validate file size before uploading to S3
     file_size = getattr(content, 'size', None) or getattr(content.file, 'size', None)
@@ -48,10 +53,10 @@ class StaticStorage(S3Boto3Storage):
 # Per-field Storage Instances for use in models
 
 class AvatarStorage(MediaStorage):
-    location = 'media/avatars'
+    location = avatar_storage_location
 
 class IconStorage(MediaStorage):
-    location = 'media/icons'
+    location = icon_storage_location
 
 
 if settings.ENVIRONMENT == 'production':

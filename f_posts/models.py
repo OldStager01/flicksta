@@ -10,7 +10,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     artist = models.CharField(max_length=255, blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='posts')
-    url = models.URLField(max_length=2000)
+    url = models.URLField(max_length=2000, blank=True, null=True)
     image = models.URLField(max_length=2000)
     body = models.TextField()
     likes = models.ManyToManyField(User, through='LikedPost', related_name='likedposts', blank=True)   
