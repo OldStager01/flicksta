@@ -120,6 +120,7 @@ INSTALLED_APPS = [
     "f_users",
     "f_features",
     "f_landingpages",
+    "core",
 ]
 
 MIDDLEWARE = [
@@ -280,28 +281,33 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STORAGE_SERVICE = env('STORAGE_SERVICE', default='cloudinary')  # 'aws' or 'cloudinary'
 MEDIA_URL = '/media/'
 
+
+# Cloudinary configuration
+CLOUDINARY_URL = env("CLOUDINARY_URL")
+# AWS S3 configuration
+AWS_ACCESS_KEY_ID = env('AWS_S3_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_S3_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='us-east-1')
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_ADDRESSING_STYLE = 'virtual'
+AWS_DEFAULT_ACL = None
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = True
+
+
 # Cloudinary configuration for production, local filesystem for development
 if ENVIRONMENT == 'production':
     if STORAGE_SERVICE == 'cloudinary':
         # FOR CLOUDINARY AS MEDIA STORAGE  
-        CLOUDINARY_URL = env("CLOUDINARY_URL")
         DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
         STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
         print("Using Cloudinary for media storage")
     elif STORAGE_SERVICE == 'aws':
         # FOR AWS S3 AS MEDIA STORAGE
-        AWS_ACCESS_KEY_ID = env('AWS_S3_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = env('AWS_S3_SECRET_ACCESS_KEY')
-        AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-        AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='us-east-1')
-        AWS_S3_SIGNATURE_VERSION = 's3v4'
-        AWS_S3_ADDRESSING_STYLE = 'virtual'
-        AWS_DEFAULT_ACL = None
-        AWS_S3_OBJECT_PARAMETERS = {
-            'CacheControl': 'max-age=86400',
-        }
-        AWS_S3_FILE_OVERWRITE = False
-        AWS_QUERYSTRING_AUTH = True
         # Use custom storage classes
         STORAGES = {
             "default": {

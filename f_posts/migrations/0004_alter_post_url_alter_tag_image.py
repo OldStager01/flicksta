@@ -12,12 +12,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="post",
-            name="url",
-            field=models.URLField(default=None, max_length=2000),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
             model_name="tag",
             name="image",
             field=models.FileField(
