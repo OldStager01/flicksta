@@ -12,10 +12,10 @@ jobs:
       SECRET_KEY: secret_key
       ENCRYPT_KEY: mKJKI2CP4Nta3OmVMAV9aW6MOH43VHxaCfPGWdHg6R4=
       CLOUDINARY_URL: https://api.cloudinary.com/v1_1/demo/image/upload
-      AWS_S3_ACCESS_KEY_ID=DEMO_ACCESS_KEY_ID
-      AWS_S3_SECRET_ACCESS_KEY=DEMO_SECRET_ACCESS_KEY
-      AWS_STORAGE_BUCKET_NAME=flicksta-test-bucket
-      AWS_S3_REGION_NAME=us-east-1
+      AWS_S3_ACCESS_KEY_ID: DEMO_ACCESS_KEY_ID
+      AWS_S3_SECRET_ACCESS_KEY: DEMO_SECRET_ACCESS_KEY
+      AWS_STORAGE_BUCKET_NAME: flicksta-test-bucket
+      AWS_S3_REGION_NAME: us-east-1
       
 
     services:
